@@ -5,137 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz RenitenteConcursos - Direitos Sociais</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #000;
+            background-image: url('https://cdn.pixabay.com/photo/2017/08/30/01/05/handcuffs-2695268_1280.jpg'), 
+                              url('https://cdn.pixabay.com/photo/2017/08/30/01/05/skull-2695269_1280.jpg');
+            background-position: left top, right bottom;
+            background-repeat: no-repeat, no-repeat;
+            background-size: 300px, 300px;
+            color: #fff;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen">
     <!-- Modal de Início -->
-    <div id="startModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-bold mb-4">RenitenteConcursos - Quiz de Direitos Sociais</h2>
-            <input id="userName" type="text" placeholder="Digite seu nome" class="border p-2 w-full mb-4 rounded">
-            <button id="startButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Iniciar</button>
+    <div id="startModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+        <div class="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full border border-gray-700">
+            <h2 class="text-2xl font-bold mb-4 text-center">RenitenteConcursos - Quiz de Direitos Sociais</h2>
+            <input id="userName" type="text" placeholder="Digite seu nome" class="border p-2 w-full mb-4 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="startButton" class="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">Iniciar</button>
         </div>
     </div>
 
     <!-- Conteúdo Principal -->
-    <div id="quizContainer" class="hidden bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-        <div class="flex justify-between mb-4">
+    <div id="quizContainer" class="hidden bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-3xl border border-gray-700">
+        <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">RenitenteConcursos - Quiz de Direitos Sociais</h1>
-            <div id="timer" class="text-lg font-semibold">25:00</div>
+            <div id="timer" class="text-lg font-semibold bg-gray-800 px-3 py-1 rounded">40:00</div>
         </div>
-        <div id="questionContainer"></div>
-        <div id="resultContainer" class="hidden mt-4"></div>
+        <div id="questionContainer" class="mb-6"></div>
+        <div id="resultContainer" class="hidden"></div>
     </div>
 
     <script>
+        // Lista de questões
         const questions = [
-            {
-                question: "Assinale a alternativa correta sobre os direitos sociais previstos na Constituição Federal de 1988:",
-                options: [
-                    "A educação é direito de todos, mas não é dever do Estado.",
-                    "A saúde é um direito exclusivo dos trabalhadores com carteira assinada.",
-                    "São direitos sociais a educação, a saúde, o trabalho, a moradia, o lazer, a segurança, a previdência social, a proteção à maternidade e à infância, e a assistência aos desamparados.",
-                    "O trabalho é um direito social apenas para maiores de 18 anos."
-                ],
-                correct: "São direitos sociais a educação, a saúde, o trabalho, a moradia, o lazer, a segurança, a previdência social, a proteção à maternidade e à infância, e a assistência aos desamparados."
-            },
-            {
-                question: "Sobre o direito à educação, assinale a alternativa correta:",
-                options: [
-                    "A educação básica é obrigatória apenas para crianças de 6 a 14 anos.",
-                    "O ensino público superior é gratuito apenas para quem comprovar carência financeira.",
-                    "A educação, direito de todos e dever do Estado e da família, será promovida e incentivada com a colaboração da sociedade.",
-                    "O acesso ao ensino fundamental é facultativo para o Poder Público."
-                ],
-                correct: "A educação, direito de todos e dever do Estado e da família, será promovida e incentivada com a colaboração da sociedade."
-            },
-            {
-                question: "Sobre o direito à saúde, qual é a afirmativa correta?",
-                options: [
-                    "A saúde é um direito universal, mas não é dever do Estado garanti-la.",
-                    "O acesso à saúde é assegurado mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos.",
-                    "O Sistema Único de Saúde (SUS) atende apenas cidadãos brasileiros.",
-                    "A saúde pública é financiada exclusivamente pelo governo federal."
-                ],
-                correct: "O acesso à saúde é assegurado mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos."
-            },
-            {
-                question: "Assinale a alternativa correta sobre os direitos dos trabalhadores:",
-                options: [
-                    "O salário mínimo deve atender às necessidades básicas do trabalhador, mas não de sua família.",
-                    "A jornada de trabalho normal é de 10 horas diárias, salvo disposição em contrário.",
-                    "São direitos dos trabalhadores urbanos e rurais, entre outros, o salário mínimo, o descanso semanal remunerado e as férias anuais remuneradas com pelo menos um terço a mais do salário normal.",
-                    "O seguro-desemprego é garantido apenas para trabalhadores urbanos."
-                ],
-                correct: "São direitos dos trabalhadores urbanos e rurais, entre outros, o salário mínimo, o descanso semanal remunerado e as férias anuais remuneradas com pelo menos um terço a mais do salário normal."
-            },
-            {
-                question: "Sobre o direito à moradia, qual é a afirmativa correta?",
-                options: [
-                    "A moradia é um direito social, mas não há obrigação do Estado em promovê-la.",
-                    "O direito à moradia é garantido apenas para famílias com renda superior a 5 salários mínimos.",
-                    "A Constituição inclui a moradia como direito social, sendo dever do Estado criar políticas públicas para assegurá-la.",
-                    "A moradia é um direito exclusivo dos trabalhadores rurais."
-                ],
-                correct: "A Constituição inclui a moradia como direito social, sendo dever do Estado criar políticas públicas para assegurá-la."
-            },
-            {
-                question: "Assinale a alternativa correta sobre a proteção à infância:",
-                options: [
-                    "É dever apenas da família assegurar às crianças o direito à educação e à saúde.",
-                    "A proteção à infância é garantida com prioridade, incluindo o direito à vida, à saúde, à alimentação, à educação e ao lazer.",
-                    "Crianças e adolescentes têm direito à proteção especial apenas após os 16 anos.",
-                    "O Estado não tem obrigação de proteger a infância em situação de risco."
-                ],
-                correct: "A proteção à infância é garantida com prioridade, incluindo o direito à vida, à saúde, à alimentação, à educação e ao lazer."
-            },
-            {
-                question: "Sobre a assistência social, qual é a afirmativa correta?",
-                options: [
-                    "A assistência social é prestada apenas a quem contribuir para a previdência social.",
-                    "A assistência social será prestada a quem dela necessitar, independentemente de contribuição à seguridade social.",
-                    "O direito à assistência social é exclusivo para idosos acima de 70 anos.",
-                    "A assistência social não inclui a proteção à família."
-                ],
-                correct: "A assistência social será prestada a quem dela necessitar, independentemente de contribuição à seguridade social."
-            },
-            {
-                question: "Assinale a alternativa correta sobre a previdência social:",
-                options: [
-                    "A previdência social é um direito opcional para os trabalhadores.",
-                    "A cobertura da previdência social inclui eventos como doença, invalidez, morte e velhice, sendo obrigatória a contribuição para acessá-la.",
-                    "A previdência social abrange os riscos de doença, invalidez, morte e velhice, sendo de caráter contributivo e de filiação obrigatória.",
-                    "A aposentadoria por idade é garantida apenas para trabalhadores rurais."
-                ],
-                correct: "A previdência social abrange os riscos de doença, invalidez, morte e velhice, sendo de caráter contributivo e de filiação obrigatória."
-            },
-            {
-                question: "Sobre o direito ao lazer, qual é a afirmativa correta?",
-                options: [
-                    "O lazer é um direito social, mas não está relacionado ao desenvolvimento humano.",
-                    "O direito ao lazer é garantido exclusivamente por iniciativas privadas.",
-                    "O lazer, como direito social, deve ser promovido pelo Estado em conjunto com a sociedade.",
-                    "O acesso ao lazer é restrito a trabalhadores com carteira assinada."
-                ],
-                correct: "O lazer, como direito social, deve ser promovido pelo Estado em conjunto com a sociedade."
-            },
-            {
-                question: "Assinale a alternativa correta sobre a seguridade social:",
-                options: [
-                    "A seguridade social compreende saúde, previdência e assistência social, sendo financiada apenas por impostos diretos.",
-                    "A seguridade social é um conjunto de ações do Estado e da sociedade destinadas a assegurar os direitos relativos à saúde, à previdência e à assistência social.",
-                    "A seguridade social não inclui a assistência aos desamparados.",
-                    "O financiamento da seguridade social é responsabilidade exclusiva do trabalhador."
-                ],
-                correct: "A seguridade social é um conjunto de ações do Estado e da sociedade destinadas a assegurar os direitos relativos à saúde, à previdência e à assistência social."
-            }
+            { question: "Qual é a alternativa correta sobre os direitos sociais previstos na Constituição Federal de 1988?",
+              options: ["São direitos sociais a educação, a saúde, a alimentação, o trabalho, a moradia, o transporte, o lazer, a segurança, a previdência social, a proteção à maternidade e à infância, e a assistência aos desamparados.", "A alimentação não é um direito social reconhecido na Constituição.", "O transporte é um direito social apenas para trabalhadores rurais.", "A segurança não está incluída nos direitos sociais."],
+              correct: "São direitos sociais a educação, a saúde, a alimentação, o trabalho, a moradia, o transporte, o lazer, a segurança, a previdência social, a proteção à maternidade e à infância, e a assistência aos desamparados." },
+            { question: "Sobre a renda básica familiar, qual é a afirmativa correta?",
+              options: ["Todo brasileiro em situação de vulnerabilidade social terá direito a uma renda básica familiar, garantida pelo poder público em programa permanente de transferência de renda, cujas normas e requisitos de acesso serão determinados em lei.", "A renda básica familiar é garantida apenas para maiores de 18 anos.", "O programa de renda básica não depende de legislação fiscal.", "A renda básica familiar foi revogada em 2021."],
+              correct: "Todo brasileiro em situação de vulnerabilidade social terá direito a uma renda básica familiar, garantida pelo poder público em programa permanente de transferência de renda, cujas normas e requisitos de acesso serão determinados em lei." },
+            { question: "Qual é a alternativa correta sobre os direitos dos trabalhadores urbanos e rurais?",
+              options: ["São direitos dos trabalhadores urbanos e rurais a relação de emprego protegida contra despedida arbitrária ou sem justa causa e o seguro-desemprego em caso de desemprego involuntário.", "O seguro-desemprego é exclusivo para trabalhadores urbanos.", "A proteção contra despedida arbitrária não inclui indenização compensatória.", "Os direitos dos trabalhadores rurais não incluem o fundo de garantia."],
+              correct: "São direitos dos trabalhadores urbanos e rurais a relação de emprego protegida contra despedida arbitrária ou sem justa causa e o seguro-desemprego em caso de desemprego involuntário." },
+            { question: "Sobre o salário mínimo, qual é a afirmativa correta?",
+              options: ["O salário mínimo, fixado em lei, nacionalmente unificado, deve atender às necessidades vitais básicas do trabalhador e de sua família, incluindo moradia, alimentação, educação, saúde, lazer, vestuário, higiene, transporte e previdência social, com reajustes periódicos que lhe preservem o poder aquisitivo.", "O salário mínimo pode ser vinculado para fins de indexação.", "O salário mínimo não cobre despesas com lazer.", "Os reajustes do salário mínimo são facultativos."],
+              correct: "O salário mínimo, fixado em lei, nacionalmente unificado, deve atender às necessidades vitais básicas do trabalhador e de sua família, incluindo moradia, alimentação, educação, saúde, lazer, vestuário, higiene, transporte e previdência social, com reajustes periódicos que lhe preservem o poder aquisitivo." },
+            { question: "Qual é a alternativa correta sobre a jornada de trabalho normal?",
+              options: ["A duração do trabalho normal não pode ser superior a oito horas diárias e quarenta e quatro semanais, facultada a compensação de horários e a redução da jornada mediante acordo ou convenção coletiva de trabalho.", "A jornada normal é de 10 horas diárias e 48 horas semanais.", "A compensação de horários é proibida por lei.", "A redução da jornada só pode ser feita por lei federal."],
+              correct: "A duração do trabalho normal não pode ser superior a oito horas diárias e quarenta e quatro semanais, facultada a compensação de horários e a redução da jornada mediante acordo ou convenção coletiva de trabalho." },
+            { question: "Sobre a proteção à família dos trabalhadores, qual é a afirmativa correta?",
+              options: ["É direito dos trabalhadores a assistência gratuita aos filhos e dependentes desde o nascimento até 5 anos de idade em creches e pré-escolas.", "A licença à gestante é de 90 dias, sem prejuízo do salário.", "O salário-família é pago apenas para dependentes maiores de 14 anos.", "A assistência gratuita em creches é limitada a trabalhadores urbanos."],
+              correct: "É direito dos trabalhadores a assistência gratuita aos filhos e dependentes desde o nascimento até 5 anos de idade em creches e pré-escolas." },
+            { question: "Qual é a alternativa correta sobre a associação sindical?",
+              options: ["É livre a associação profissional ou sindical, sendo vedada ao Poder Público a interferência e a intervenção na organização sindical.", "A lei exige autorização estatal para a criação de sindicatos.", "É permitida a criação de mais de um sindicato na mesma base territorial.", "A filiação a sindicatos é obrigatória para todos os trabalhadores."],
+              correct: "É livre a associação profissional ou sindical, sendo vedada ao Poder Público a interferência e a intervenção na organização sindical." },
+            { question: "Sobre o direito de greve, qual é a afirmativa correta?",
+              options: ["É assegurado o direito de greve, competindo aos trabalhadores decidir sobre a oportunidade de exercê-lo e sobre os interesses que devam por meio dele defender.", "O direito de greve não se aplica a trabalhadores rurais.", "A lei proíbe greves em serviços essenciais.", "Os abusos na greve não são puníveis por lei."],
+              correct: "É assegurado o direito de greve, competindo aos trabalhadores decidir sobre a oportunidade de exercê-lo e sobre os interesses que devam por meio dele defender." },
+            { question: "Qual é a alternativa correta sobre a participação em colegiados públicos?",
+              options: ["É assegurada a participação dos trabalhadores e empregadores nos colegiados dos órgãos públicos em que seus interesses profissionais ou previdenciários sejam objeto de discussão e deliberação.", "A participação em colegiados é exclusiva para empregadores.", "Os trabalhadores não têm direito a participar de decisões previdenciárias.", "A participação é limitada a empresas privadas."],
+              correct: "É assegurada a participação dos trabalhadores e empregadores nos colegiados dos órgãos públicos em que seus interesses profissionais ou previdenciários sejam objeto de discussão e deliberação." },
+            { question: "Sobre os trabalhadores domésticos, qual é a alternativa correta?",
+              options: ["São assegurados aos trabalhadores domésticos os direitos ao salário mínimo, irredutibilidade do salário, décimo terceiro salário, repouso semanal remunerado, férias anuais remuneradas com um terço a mais, licença à gestante, licença-paternidade, aviso prévio e aposentadoria, bem como integração à previdência social.", "Os trabalhadores domésticos não têm direito à licença-paternidade.", "A integração à previdência social é opcional para trabalhadores domésticos.", "O repouso semanal remunerado não se aplica a essa categoria."],
+              correct: "São assegurados aos trabalhadores domésticos os direitos ao salário mínimo, irredutibilidade do salário, décimo terceiro salário, repouso semanal remunerado, férias anuais remuneradas com um terço a mais, licença à gestante, licença-paternidade, aviso prévio e aposentadoria, bem como integração à previdência social." },
+            { question: "Qual é a alternativa correta sobre o repouso semanal remunerado?",
+              options: ["É direito dos trabalhadores o repouso semanal remunerado, preferencialmente aos domingos.", "O repouso semanal remunerado é obrigatório apenas aos sábados.", "O repouso semanal não precisa ser remunerado.", "Esse direito é exclusivo para trabalhadores urbanos."],
+              correct: "É direito dos trabalhadores o repouso semanal remunerado, preferencialmente aos domingos." },
+            { question: "Sobre a remuneração do trabalho noturno, qual é a afirmativa correta?",
+              options: ["A remuneração do trabalho noturno deve ser superior à do diurno, conforme direito dos trabalhadores.", "O trabalho noturno tem remuneração igual à do diurno.", "A remuneração superior é opcional para o trabalho noturno.", "Esse direito não se aplica a trabalhadores rurais."],
+              correct: "A remuneração do trabalho noturno deve ser superior à do diurno, conforme direito dos trabalhadores." },
+            { question: "Qual é a alternativa correta sobre a proibição de discriminação no trabalho?",
+              options: ["A proibição de diferença de salários, de exercício de funções e de critério de admissão por motivo de sexo, idade, cor ou estado civil é um direito dos trabalhadores.", "A discriminação por idade é permitida na admissão.", "A igualdade de direitos não inclui trabalhadores avulsos.", "A proibição de discriminação se aplica apenas a salários."],
+              correct: "A proibição de diferença de salários, de exercício de funções e de critério de admissão por motivo de sexo, idade, cor ou estado civil é um direito dos trabalhadores." },
+            { question: "Sobre a eleição de representantes em empresas, qual é a afirmativa correta?",
+              options: ["Nas empresas de mais de duzentos empregados, é assegurada a eleição de um representante destes com a finalidade exclusiva de promover-lhes o entendimento direto com os empregadores.", "A eleição de representantes é obrigatória apenas em empresas com mais de 500 empregados.", "O representante eleito não tem função de diálogo com empregadores.", "Esse direito é exclusivo para trabalhadores rurais."],
+              correct: "Nas empresas de mais de duzentos empregados, é assegurada a eleição de um representante destes com a finalidade exclusiva de promover-lhes o entendimento direto com os empregadores." },
+            { question: "Qual é a alternativa correta sobre o seguro contra acidentes de trabalho?",
+              options: ["O seguro contra acidentes de trabalho, a cargo do empregador, não exclui a indenização a que este está obrigado, quando incorrer em dolo ou culpa.", "O seguro contra acidentes é opcional para empregadores.", "A indenização por acidentes é limitada a trabalhadores urbanos.", "O empregador não é responsável por acidentes de trabalho."],
+              correct: "O seguro contra acidentes de trabalho, a cargo do empregador, não exclui a indenização a que este está obrigado, quando incorrer em dolo ou culpa." },
+            { question: "Sobre a licença à gestante, qual é a afirmativa correta?",
+              options: ["A licença à gestante, sem prejuízo do emprego e do salário, tem a duração de cento e vinte dias.", "A licença à gestante é de 60 dias, conforme a Constituição.", "A licença à gestante não garante a manutenção do salário.", "Esse direito é exclusivo para trabalhadoras urbanas."],
+              correct: "A licença à gestante, sem prejuízo do emprego e do salário, tem a duração de cento e vinte dias." },
+            { question: "Qual é a alternativa correta sobre a proteção sindical?",
+              options: ["É vedada a dispensa do empregado sindicalizado a partir do registro da candidatura a cargo de direção ou representação sindical e, se eleito, até um ano após o final do mandato, salvo se cometer falta grave nos termos da lei.", "A dispensa de sindicalizados é permitida durante o mandato.", "A proteção sindical não se aplica a suplentes.", "Esse direito é exclusivo para trabalhadores rurais."],
+              correct: "É vedada a dispensa do empregado sindicalizado a partir do registro da candidatura a cargo de direção ou representação sindical e, se eleito, até um ano após o final do mandato, salvo se cometer falta grave nos termos da lei." },
+            { question: "Sobre o serviço extraordinário, qual é a afirmativa correta?",
+              options: ["A remuneração do serviço extraordinário deve ser superior, no mínimo, em cinquenta por cento à do normal.", "O serviço extraordinário é remunerado em 25% a mais do normal.", "A remuneração extra é opcional para empregadores.", "Esse direito não se aplica a trabalhadores avulsos."],
+              correct: "A remuneração do serviço extraordinário deve ser superior, no mínimo, em cinquenta por cento à do normal." },
+            { question: "Qual é a alternativa correta sobre o fundo de garantia do tempo de serviço?",
+              options: ["O fundo de garantia do tempo de serviço é um direito dos trabalhadores urbanos e rurais.", "O fundo de garantia é exclusivo para trabalhadores urbanos.", "Esse direito foi revogado pela Emenda Constitucional nº 20.", "O fundo de garantia não se aplica a trabalhadores domésticos."],
+              correct: "O fundo de garantia do tempo de serviço é um direito dos trabalhadores urbanos e rurais." },
+            { question: "Sobre a assistência aos desamparados, qual é a afirmativa correta?",
+              options: ["A assistência aos desamparados é um direito social garantido na forma da Constituição.", "A assistência aos desamparados é limitada a maiores de 65 anos.", "Esse direito não está incluído nos direitos sociais.", "A assistência aos desamparados depende de contribuição prévia."],
+              correct: "A assistência aos desamparados é um direito social garantido na forma da Constituição." }
         ];
 
+        // Variáveis globais
         let currentQuestion = 0;
         let userAnswers = [];
         let timer;
-        let timeLeft = 25 * 60; // 25 minutos em segundos
+        let timeLeft = 40 * 60; // 40 minutos em segundos
         let userName = "";
 
+        // Elementos do DOM
         const startModal = document.getElementById('startModal');
         const quizContainer = document.getElementById('quizContainer');
         const startButton = document.getElementById('startButton');
@@ -144,22 +118,25 @@
         const resultContainer = document.getElementById('resultContainer');
         const timerDisplay = document.getElementById('timer');
 
-        startButton.addEventListener('click', () => {
+        // Evento de início
+        startButton.onclick = function() {
             userName = userNameInput.value.trim();
-            if (userName) {
-                startModal.classList.add('hidden');
-                quizContainer.classList.remove('hidden');
-                startQuiz();
-            } else {
-                alert('Por favor, insira seu nome!');
+            if (userName === "") {
+                alert("Por favor, insira seu nome!");
+                return;
             }
-        });
+            startModal.style.display = "none"; // Esconde o modal
+            quizContainer.style.display = "block"; // Mostra o quiz
+            startQuiz();
+        };
 
+        // Inicia o quiz
         function startQuiz() {
             startTimer();
-            showQuestion();
+            displayQuestion();
         }
 
+        // Inicia o timer
         function startTimer() {
             timer = setInterval(() => {
                 timeLeft--;
@@ -168,53 +145,58 @@
                 timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    showResults();
+                    displayResults();
                 }
             }, 1000);
         }
 
-        function showQuestion() {
+        // Exibe a questão atual
+        function displayQuestion() {
             const q = questions[currentQuestion];
             questionContainer.innerHTML = `
-                <h2 class="text-xl mb-4">${currentQuestion + 1}. ${q.question}</h2>
-                <div class="grid gap-2">
+                <h2 class="text-xl font-semibold mb-4">${currentQuestion + 1}. ${q.question}</h2>
+                <div class="grid gap-3">
                     ${q.options.map(option => `
-                        <button class="bg-gray-200 p-2 rounded hover:bg-gray-300 text-left" onclick="selectAnswer('${option}')">${option}</button>
+                        <button class="bg-gray-800 p-3 rounded hover:bg-gray-700 text-white text-left transition-colors" onclick="selectAnswer('${option}')">${option}</button>
                     `).join('')}
                 </div>
             `;
         }
 
+        // Seleciona uma resposta
         function selectAnswer(answer) {
             userAnswers.push(answer);
             currentQuestion++;
             if (currentQuestion < questions.length) {
-                showQuestion();
+                displayQuestion();
             } else {
                 clearInterval(timer);
-                showResults();
+                displayResults();
             }
         }
 
-        function showResults() {
+        // Exibe os resultados
+        function displayResults() {
             let score = 0;
             questions.forEach((q, i) => {
                 if (q.correct === userAnswers[i]) score++;
             });
             const percentage = (score / questions.length) * 100;
 
-            let resultHTML = `<h2 class="text-2xl font-bold mb-4">Resultado de ${userName} - RenitenteConcursos</h2>`;
+            let resultHTML = `
+                <h2 class="text-2xl font-bold mb-4">Resultado de ${userName} - RenitenteConcursos</h2>
+            `;
             if (percentage >= 90) {
-                resultHTML += `<div class="text-3xl font-bold text-green-500 animate-pulse">PARABÉNS!!!</div>`;
+                resultHTML += `<div class="text-3xl font-bold text-green-500 animate-pulse mb-4">PARABÉNS!!!</div>`;
             }
             resultHTML += `
-                <p class="text-xl mb-4">Pontuação: ${score}/${questions.length} (${percentage.toFixed(2)}%)</p>
-                <div class="mt-4">
+                <p class="text-xl mb-6">Pontuação: ${score}/${questions.length} (${percentage.toFixed(2)}%)</p>
+                <div class="space-y-6">
             `;
             questions.forEach((q, i) => {
                 resultHTML += `
-                    <div class="mb-4">
-                        <p><strong>${i + 1}. ${q.question}</strong></p>
+                    <div>
+                        <p class="font-semibold">${i + 1}. ${q.question}</p>
                         <p>Sua resposta: <span class="${q.correct === userAnswers[i] ? 'text-green-500' : 'text-red-500'}">${userAnswers[i]}</span></p>
                         <p>Resposta correta: <span class="text-green-500">${q.correct}</span></p>
                     </div>
@@ -222,8 +204,8 @@
             });
             resultHTML += `</div>`;
 
-            questionContainer.classList.add('hidden');
-            resultContainer.classList.remove('hidden');
+            questionContainer.style.display = "none";
+            resultContainer.style.display = "block";
             resultContainer.innerHTML = resultHTML;
         }
     </script>
