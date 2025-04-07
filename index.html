@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz RenitenteConcursos - Direitos Sociais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <!-- Modal de Início -->
+    <div id="startModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">RenitenteConcursos - Quiz de Direitos Sociais</h2>
+            <input id="userName" type="text" placeholder="Digite seu nome" class="border p-2 w-full mb-4 rounded">
+            <button id="startButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Iniciar</button>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div id="quizContainer" class="hidden bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <div class="flex justify-between mb-4">
+            <h1 class="text-2xl font-bold">RenitenteConcursos - Quiz de Direitos Sociais</h1>
+            <div id="timer" class="text-lg font-semibold">25:00</div>
+        </div>
+        <div id="questionContainer"></div>
+        <div id="resultContainer" class="hidden mt-4"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Assinale a alternativa correta sobre os direitos sociais previstos na Constituição Federal de 1988:",
+                options: [
+                    "A educação é direito de todos, mas não é dever do Estado.",
+                    "A saúde é um direito exclusivo dos trabalhadores com carteira assinada.",
+                    "São direitos sociais a educação, a saúde, o trabalho, a moradia, o lazer, a segurança, a previdência social, a proteção à maternidade e à infância, e a assistência aos desamparados.",
+                    "O trabalho é um direito social apenas para maiores de 18 anos."
+                ],
+                correct: "São direitos sociais a educação, a saúde, o trabalho, a moradia, o lazer, a segurança, a previdência social, a proteção à maternidade e à infância, e a assistência aos desamparados."
+            },
+            {
+                question: "Sobre o direito à educação, assinale a alternativa correta:",
+                options: [
+                    "A educação básica é obrigatória apenas para crianças de 6 a 14 anos.",
+                    "O ensino público superior é gratuito apenas para quem comprovar carência financeira.",
+                    "A educação, direito de todos e dever do Estado e da família, será promovida e incentivada com a colaboração da sociedade.",
+                    "O acesso ao ensino fundamental é facultativo para o Poder Público."
+                ],
+                correct: "A educação, direito de todos e dever do Estado e da família, será promovida e incentivada com a colaboração da sociedade."
+            },
+            {
+                question: "Sobre o direito à saúde, qual é a afirmativa correta?",
+                options: [
+                    "A saúde é um direito universal, mas não é dever do Estado garanti-la.",
+                    "O acesso à saúde é assegurado mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos.",
+                    "O Sistema Único de Saúde (SUS) atende apenas cidadãos brasileiros.",
+                    "A saúde pública é financiada exclusivamente pelo governo federal."
+                ],
+                correct: "O acesso à saúde é assegurado mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos."
+            },
+            {
+                question: "Assinale a alternativa correta sobre os direitos dos trabalhadores:",
+                options: [
+                    "O salário mínimo deve atender às necessidades básicas do trabalhador, mas não de sua família.",
+                    "A jornada de trabalho normal é de 10 horas diárias, salvo disposição em contrário.",
+                    "São direitos dos trabalhadores urbanos e rurais, entre outros, o salário mínimo, o descanso semanal remunerado e as férias anuais remuneradas com pelo menos um terço a mais do salário normal.",
+                    "O seguro-desemprego é garantido apenas para trabalhadores urbanos."
+                ],
+                correct: "São direitos dos trabalhadores urbanos e rurais, entre outros, o salário mínimo, o descanso semanal remunerado e as férias anuais remuneradas com pelo menos um terço a mais do salário normal."
+            },
+            {
+                question: "Sobre o direito à moradia, qual é a afirmativa correta?",
+                options: [
+                    "A moradia é um direito social, mas não há obrigação do Estado em promovê-la.",
+                    "O direito à moradia é garantido apenas para famílias com renda superior a 5 salários mínimos.",
+                    "A Constituição inclui a moradia como direito social, sendo dever do Estado criar políticas públicas para assegurá-la.",
+                    "A moradia é um direito exclusivo dos trabalhadores rurais."
+                ],
+                correct: "A Constituição inclui a moradia como direito social, sendo dever do Estado criar políticas públicas para assegurá-la."
+            },
+            {
+                question: "Assinale a alternativa correta sobre a proteção à infância:",
+                options: [
+                    "É dever apenas da família assegurar às crianças o direito à educação e à saúde.",
+                    "A proteção à infância é garantida com prioridade, incluindo o direito à vida, à saúde, à alimentação, à educação e ao lazer.",
+                    "Crianças e adolescentes têm direito à proteção especial apenas após os 16 anos.",
+                    "O Estado não tem obrigação de proteger a infância em situação de risco."
+                ],
+                correct: "A proteção à infância é garantida com prioridade, incluindo o direito à vida, à saúde, à alimentação, à educação e ao lazer."
+            },
+            {
+                question: "Sobre a assistência social, qual é a afirmativa correta?",
+                options: [
+                    "A assistência social é prestada apenas a quem contribuir para a previdência social.",
+                    "A assistência social será prestada a quem dela necessitar, independentemente de contribuição à seguridade social.",
+                    "O direito à assistência social é exclusivo para idosos acima de 70 anos.",
+                    "A assistência social não inclui a proteção à família."
+                ],
+                correct: "A assistência social será prestada a quem dela necessitar, independentemente de contribuição à seguridade social."
+            },
+            {
+                question: "Assinale a alternativa correta sobre a previdência social:",
+                options: [
+                    "A previdência social é um direito opcional para os trabalhadores.",
+                    "A cobertura da previdência social inclui eventos como doença, invalidez, morte e velhice, sendo obrigatória a contribuição para acessá-la.",
+                    "A previdência social abrange os riscos de doença, invalidez, morte e velhice, sendo de caráter contributivo e de filiação obrigatória.",
+                    "A aposentadoria por idade é garantida apenas para trabalhadores rurais."
+                ],
+                correct: "A previdência social abrange os riscos de doença, invalidez, morte e velhice, sendo de caráter contributivo e de filiação obrigatória."
+            },
+            {
+                question: "Sobre o direito ao lazer, qual é a afirmativa correta?",
+                options: [
+                    "O lazer é um direito social, mas não está relacionado ao desenvolvimento humano.",
+                    "O direito ao lazer é garantido exclusivamente por iniciativas privadas.",
+                    "O lazer, como direito social, deve ser promovido pelo Estado em conjunto com a sociedade.",
+                    "O acesso ao lazer é restrito a trabalhadores com carteira assinada."
+                ],
+                correct: "O lazer, como direito social, deve ser promovido pelo Estado em conjunto com a sociedade."
+            },
+            {
+                question: "Assinale a alternativa correta sobre a seguridade social:",
+                options: [
+                    "A seguridade social compreende saúde, previdência e assistência social, sendo financiada apenas por impostos diretos.",
+                    "A seguridade social é um conjunto de ações do Estado e da sociedade destinadas a assegurar os direitos relativos à saúde, à previdência e à assistência social.",
+                    "A seguridade social não inclui a assistência aos desamparados.",
+                    "O financiamento da seguridade social é responsabilidade exclusiva do trabalhador."
+                ],
+                correct: "A seguridade social é um conjunto de ações do Estado e da sociedade destinadas a assegurar os direitos relativos à saúde, à previdência e à assistência social."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let timer;
+        let timeLeft = 25 * 60; // 25 minutos em segundos
+        let userName = "";
+
+        const startModal = document.getElementById('startModal');
+        const quizContainer = document.getElementById('quizContainer');
+        const startButton = document.getElementById('startButton');
+        const userNameInput = document.getElementById('userName');
+        const questionContainer = document.getElementById('questionContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const timerDisplay = document.getElementById('timer');
+
+        startButton.addEventListener('click', () => {
+            userName = userNameInput.value.trim();
+            if (userName) {
+                startModal.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                startQuiz();
+            } else {
+                alert('Por favor, insira seu nome!');
+            }
+        });
+
+        function startQuiz() {
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            questionContainer.innerHTML = `
+                <h2 class="text-xl mb-4">${currentQuestion + 1}. ${q.question}</h2>
+                <div class="grid gap-2">
+                    ${q.options.map(option => `
+                        <button class="bg-gray-200 p-2 rounded hover:bg-gray-300 text-left" onclick="selectAnswer('${option}')">${option}</button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function selectAnswer(answer) {
+            userAnswers.push(answer);
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                clearInterval(timer);
+                showResults();
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            questions.forEach((q, i) => {
+                if (q.correct === userAnswers[i]) score++;
+            });
+            const percentage = (score / questions.length) * 100;
+
+            let resultHTML = `<h2 class="text-2xl font-bold mb-4">Resultado de ${userName} - RenitenteConcursos</h2>`;
+            if (percentage >= 90) {
+                resultHTML += `<div class="text-3xl font-bold text-green-500 animate-pulse">PARABÉNS!!!</div>`;
+            }
+            resultHTML += `
+                <p class="text-xl mb-4">Pontuação: ${score}/${questions.length} (${percentage.toFixed(2)}%)</p>
+                <div class="mt-4">
+            `;
+            questions.forEach((q, i) => {
+                resultHTML += `
+                    <div class="mb-4">
+                        <p><strong>${i + 1}. ${q.question}</strong></p>
+                        <p>Sua resposta: <span class="${q.correct === userAnswers[i] ? 'text-green-500' : 'text-red-500'}">${userAnswers[i]}</span></p>
+                        <p>Resposta correta: <span class="text-green-500">${q.correct}</span></p>
+                    </div>
+                `;
+            });
+            resultHTML += `</div>`;
+
+            questionContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            resultContainer.innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>
